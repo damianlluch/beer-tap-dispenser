@@ -4,7 +4,7 @@ import {
   Body,
   Controller,
   HttpStatus,
-  Post,
+  Post, Put,
   Request,
   Res,
 } from '@nestjs/common';
@@ -29,12 +29,41 @@ export class DispenserController {
         ...body,
         flow_volume: body.flor_volume,
         price: body.price,
+        beerType: body.beerType,
+        brand: body.brandName
       };
 
       const dispenserCreated: DispenserDocument =
         await this.dispenserService.create(dispenser);
       return res.status(HttpStatus.OK).json({
-        message: 'Hello world!',
+        message: 'Dispenser Created',
+        dispenser: dispenserCreated,
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  @Put('/')
+  async changePriceDispenser(
+      @Request() req: Request,
+      @Res() res: Response,
+      @Body() body: CreateDispenserDTO,
+  ) {
+    console.log('POST /');
+    console.log('Body:', JSON.stringify(body));
+    try {
+      const dispenser: Dispenser = {
+        ...new Dispenser(),
+        ...body,
+        flow_volume: body.flor_volume,
+        price: body.price,
+      };
+
+      const dispenserCreated: DispenserDocument =
+          await this.dispenserService.create(dispenser);
+      return res.status(HttpStatus.OK).json({
+        message: 'Dispenser Created',
         dispenser: dispenserCreated,
       });
     } catch (e) {
