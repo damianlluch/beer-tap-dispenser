@@ -1,0 +1,184 @@
+openapi: 3.1.0
+x-stoplight:
+  id: juus8uwnzzal5
+info:
+  description: "This API manages the flow of a tap beer dispenser mechanism to help those bars that allow their clients 
+  to serve themselves beer. Every time a client opens the tap, this API starts counting how many liters come out of the 
+  tap until is closed. \n\nAfter that, the bartender could know how much their customers have spent drinking beer! 🍻"
+  version: 1.0.0
+  title: Beer tap dispenser
+  contact:
+    name: Rviewer dev team
+    url: 'https://rviewer.io'
+    email: dev@rviewer.io
+  license:
+    name: MIT
+    url: 'https://choosealicense.com/licenses/mit/'
+paths:
+  /dispenser:
+    post:
+      summary: Create a new dispenser
+      description: |
+        This endpoint will create a new dispenser with a configuration about how much volume comes out (litres per second)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                flow_volume:
+                  description: Flow volume is the number of liters per second are coming out from the tap
+                  type: number
+              required:
+                - flow_volume
+              example:
+                flow_volume: 0.0653
+      responses:
+        '200':
+          description: Dispenser created correctly
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: Id of the created dispenser
+                    type: string
+                    format: uuid
+                  flow_volume:
+                    description: The configured flow volume (litres/second) for the new dispenser
+                    type: number
+                required:
+                  - id
+                  - flow_volume
+                example:
+                  id: e678cd48-76cc-474c-b611-94dd2df533cb
+                  flow_volume: 0.0653
+        '500':
+          description: Unexpected API error
+  '/dispenser/{id}/status':
+    put:
+      summary: Change the dispenser status for a given dispenser Id
+      description: |
+        This endpoint will change the status for a given dispenser. 
+
+        The status could be:
+          > `open`: The dispenser will start counting how much time (and beer) is spent on this usage
+        
+          > `close`: The dispenser closes immediately the beer flow and stops counting
+      parameters:
+        - in: path
+          name: id
+          description: Dispenser Id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  description: Status of the flow dispenser
+                  type: string
+                  enum:
+                    - open
+                    - close
+                updated_at:
+                  description: Timestamp for the update
+                  type: string
+                  format: date-time
+              required:
+                - status
+              example:
+                status: open
+                updated_at: '2022-01-01T02:00:00Z'
+      responses:
+        '202':
+          description: Status of the tap changed correctly
+        '409':
+          description: Dispenser is already opened/closed
+        '500':
+          description: Unexpected API error
+  '/dispenser/{id}/spending':
+    get:
+      summary: Returns the money spent by the given dispenser Id
+      description: |
+        Whether the dispenser is open or close, this endpoint returns how much money has this dispenser ID spent break 
+        down by its uses. This endpoint could be request at any time, even if the tap is open 
+        (so, the `closed_at` field would be `null`).
+
+        To do so, we will use a reference value of 12.25€/l. 
+
+        So, if the dispenser has configured the flow volume ratio as 0.064 litres/second and the tap was open for 
+        22 seconds, the total spent for this usage is 17.248.
+      parameters:
+        - in: path
+          name: id
+          description: Dispenser Id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Total amount spent by the dispenser
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  amount:
+                    description: Total amount
+                    type: number
+                  usages:
+                    description: Usage lines
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DispenserSpendingLine'
+                required:
+                  - amount
+                  - usages
+                example:
+                  amount: 57.678
+                  usages:
+                    - opened_at: '2022-01-01T02:00:00Z'
+                      closed_at: '2022-01-01T02:00:50Z'
+                      flow_volume: 0.064
+                      total_spent: 39.2
+                    - opened_at: '2022-01-01T02:50:58Z'
+                      closed_at: '2022-01-01T02:51:20Z'
+                      flow_volume: 0.064
+                      total_spent: 17.248
+                    - opened_at: '2022-01-01T13:50:58Z'
+                      closed_at: null
+                      flow_volume: 0.064
+                      total_spent: 1.23
+        '404':
+          description: Requested dispenser does not exist
+        '500':
+          description: Unexpected API error
+components:
+  schemas:
+    DispenserSpendingLine:
+      type: object
+      properties:
+        opened_at:
+          type: string
+          format: date-time
+          example: '2022-01-01T02:00:00Z'
+        closed_at:
+          type:
+            string
+          nullable: true
+          format: date-time
+          example: '2022-01-01T02:00:50Z'
+        flow_volume:
+          type: number
+          example: 0.064
+        total_spent:
+          type: number
+          example: 39.2
+x-internal: false
