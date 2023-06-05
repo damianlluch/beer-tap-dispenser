@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ClientSession, Connection, Model, Types } from "mongoose";
 import { InjectConnection, InjectModel } from "@nestjs/mongoose";
 import { Dispenser, DispenserDocument } from "./schemas/dispenser.schema";
-import { CreateDispenserInterface } from "./interfaces/dispenser.interface";
+import {CreateDispenserInterface, DispenserStatus} from "./interfaces/dispenser.interface";
 
 @Injectable()
 export class DispenserService {
@@ -31,14 +31,32 @@ export class DispenserService {
 
   async findByUniqueName(
       uniqueName: string
-  ) {
-    let dispenser;
+  ): Promise<DispenserDocument> {
+    let dispenser: DispenserDocument;
     try {
-      dispenser =  await this.dispenserModel.findOne({ uniqueName });
+      dispenser = await this.dispenserModel.findOne({ uniqueName });
       console.log(dispenser, 'dispenser')
       return dispenser;
     } catch (e) {
       console.error(e);
+    }
+  }
+
+  async open(dispenser: DispenserDocument): Promise<boolean> {
+    try {
+      const session = await this.connection.startSession();
+      await session.withTransaction(async () => {
+        await this.dispenserModel.updateOne(
+            { uniqueName: dispenser.uniqueName },
+            { $set: { status: DispenserStatus.Open }},
+            session,
+        );
+      })
+      await session.endSession();
+      return true;
+    } catch (e) {
+      console.error(e);
+      return false;
     }
   }
 }
