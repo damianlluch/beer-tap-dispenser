@@ -49,24 +49,20 @@ export class DispenserController {
     }
   }
 
-  @Put("/")
+  @Put("/open")
   async openDispenser(
     @Request() req: Request,
     @Res() res: Response,
     @Body() body: OpenDispenserDTO
   ) {
-    console.log("PUT /");
+    console.log("PUT /open");
     console.log("Body:", JSON.stringify(body));
     try {
-      const dispenser: Dispenser = {
-        ...new Dispenser(),
-        ...body,
-        flow_volume: body.flor_volume,
-        price: body.price,
-      };
 
-      const dispenserCreated: DispenserDocument =
-        await this.dispenserService.create(dispenser);
+
+      const dispenserCreated =
+        await this.dispenserService.findByUniqueName(body.uniqueName);
+      console.log(dispenserCreated);
       return res.status(HttpStatus.OK).json({
         message: "Dispenser Created",
         dispenser: dispenserCreated,

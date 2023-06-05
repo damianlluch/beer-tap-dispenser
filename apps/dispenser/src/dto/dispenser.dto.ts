@@ -21,18 +21,6 @@ export class CreateDispenserDTO {
 
 export class OpenDispenserDTO {
   @IsNotEmpty()
-  @IsPositive()
-  flor_volume: number;
-
-  @IsNotEmpty()
-  @IsPositive()
-  price: number;
-
-  @IsEnum(BrandName)
   @IsString()
-  brandName: BrandName;
-
-  @IsEnum(BeerType)
-  @IsString()
-  beerType: BeerType;
+  uniqueName: string;
 }

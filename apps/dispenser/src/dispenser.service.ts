@@ -28,4 +28,17 @@ export class DispenserService {
       console.error(e);
     }
   }
+
+  async findByUniqueName(
+      uniqueName: string
+  ) {
+    let dispenser;
+    try {
+      dispenser =  await this.dispenserModel.findOne({ uniqueName });
+      console.log(dispenser, 'dispenser')
+      return dispenser;
+    } catch (e) {
+      console.error(e);
+    }
+  }
 }

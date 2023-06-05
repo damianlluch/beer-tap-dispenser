@@ -20,7 +20,7 @@ export class Dispenser {
   @Prop({ type: String, enum: BrandName, required: true })
   brand: string;
 
-  @Prop({ type: String, enum: DispenserStatus, default: DispenserStatus.Close })
+  @Prop({ type: String, enum: DispenserStatus, default: DispenserStatus.Closed })
   status: string;
 
   @Prop({ type: String })
