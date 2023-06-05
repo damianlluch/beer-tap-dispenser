@@ -1,18 +1,18 @@
-import { Injectable } from '@nestjs/common';
-import { ClientSession, Connection, Model, Types } from 'mongoose';
-import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Injectable } from "@nestjs/common";
+import { ClientSession, Connection, Model, Types } from "mongoose";
+import { InjectConnection, InjectModel } from "@nestjs/mongoose";
 import { Dispenser, DispenserDocument } from "./schemas/dispenser.schema";
-import { CreateDispenserInterface } from './interfaces/dispenser.interface';
+import { CreateDispenserInterface } from "./interfaces/dispenser.interface";
 
 @Injectable()
 export class DispenserService {
   constructor(
-    @InjectModel('Dispensers')
+    @InjectModel("Dispensers")
     private dispenserModel: Model<Dispenser>,
-    @InjectConnection() private readonly connection: Connection,
+    @InjectConnection() private readonly connection: Connection
   ) {}
   async create(
-    dispenser: Dispenser | CreateDispenserInterface,
+    dispenser: Dispenser | CreateDispenserInterface
   ): Promise<DispenserDocument> {
     try {
       let dispenserCreated;

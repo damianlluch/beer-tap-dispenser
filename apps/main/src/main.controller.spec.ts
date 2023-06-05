@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { MainController } from './main.controller';
-import { MainService } from './main.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { MainController } from "./main.controller";
+import { MainService } from "./main.service";
 
-describe('MainController', () => {
+describe("MainController", () => {
   let mainController: MainController;
 
   beforeEach(async () => {
@@ -14,9 +14,9 @@ describe('MainController', () => {
     mainController = app.get<MainController>(MainController);
   });
 
-  describe('root', () => {
+  describe("root", () => {
     it('should return "Hello World!"', () => {
-      expect(mainController.getHello()).toBe('Hello World!');
+      expect(mainController.getHello()).toBe("Hello World!");
     });
   });
 });

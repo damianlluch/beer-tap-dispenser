@@ -1,5 +1,9 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import {BeerType, BrandName, DispenserStatus} from "../interfaces/dispenser.interface";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import {
+  BeerType,
+  BrandName,
+  DispenserStatus,
+} from "../interfaces/dispenser.interface";
 export type DispenserDocument = Dispenser & Document;
 
 @Schema()
@@ -18,6 +22,9 @@ export class Dispenser {
 
   @Prop({ type: String, enum: DispenserStatus, default: DispenserStatus.Close })
   status: string;
+
+  @Prop({ type: String })
+  uniqueName: string;
 }
 
 export const DispenserSchema = SchemaFactory.createForClass(Dispenser);

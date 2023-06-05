@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { DispenserController } from './dispenser.controller';
-import { DispenserService } from './dispenser.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { DispenserController } from "./dispenser.controller";
+import { DispenserService } from "./dispenser.service";
 
-describe('DispenserController', () => {
+describe("DispenserController", () => {
   let dispenserController: DispenserController;
 
   beforeEach(async () => {
@@ -14,9 +14,9 @@ describe('DispenserController', () => {
     dispenserController = app.get<DispenserController>(DispenserController);
   });
 
-  describe('root', () => {
+  describe("root", () => {
     it('should return "Hello World!"', () => {
-      expect(dispenserController.getHello()).toBe('Hello World!');
+      expect(dispenserController.getHello()).toBe("Hello World!");
     });
   });
 });
