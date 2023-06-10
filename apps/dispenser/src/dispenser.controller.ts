@@ -1,5 +1,5 @@
 import { DispenserService } from "./dispenser.service";
-import { CreateDispenserDTO, OpenDispenserDTO } from "./dto/dispenser.dto";
+import {CloseDispenserDTO, CreateDispenserDTO, OpenDispenserDTO} from "./dto/dispenser.dto";
 import {
   Body,
   Controller,
@@ -50,13 +50,13 @@ export class DispenserController {
     }
   }
 
-  @Put("/open")
+  @Put("/openDispenser")
   async openDispenser(
     @Request() req: Request,
     @Res() res: Response,
     @Body() body: OpenDispenserDTO
   ) {
-    console.log("PUT /open");
+    console.log("PUT /openDispenser");
     console.log("Body:", JSON.stringify(body));
     try {
       const dispenserOpened: DispenserDocument =
@@ -82,6 +82,45 @@ export class DispenserController {
       } else {
         return res.status(HttpStatus.CONFLICT).json({
           message: "Error opening the dispenser",
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  @Put("/closeDispenser")
+  async closeDispenser(
+      @Request() req: Request,
+      @Res() res: Response,
+      @Body() body: CloseDispenserDTO
+  ) {
+    console.log("PUT /closeDispenser");
+    console.log("Body:", JSON.stringify(body));
+    try {
+      const dispenserClosed: DispenserDocument =
+          await this.dispenserService.findByUniqueName(body.uniqueName);
+
+      if (!dispenserClosed) {
+        return res.status(HttpStatus.NOT_FOUND).json({
+          message: "The dispenser does not exist",
+        });
+      }
+
+      if (dispenserClosed.status == DispenserStatus.Closed) {
+        return res.status(HttpStatus.NOT_ACCEPTABLE).json({
+          message: "The dispenser is already closed",
+        });
+      }
+      const dispenserResult: boolean = await this.dispenserService.close(dispenserClosed);
+      if (dispenserResult) {
+        return res.status(HttpStatus.OK).json({
+          message: "Dispenser successfully closed",
+          dispenser: dispenserClosed,
+        });
+      } else {
+        return res.status(HttpStatus.CONFLICT).json({
+          message: "Error clsing the dispenser",
         });
       }
     } catch (e) {

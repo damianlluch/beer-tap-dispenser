@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsPositive, IsString } from "class-validator";
-import { BeerType, BrandName } from "../interfaces/dispenser.interface";
+import {BeerType, BrandName, DispenserStatus} from "../interfaces/dispenser.interface";
 
 export class CreateDispenserDTO {
   @IsNotEmpty()
@@ -20,6 +20,12 @@ export class CreateDispenserDTO {
 }
 
 export class OpenDispenserDTO {
+  @IsNotEmpty()
+  @IsString()
+  uniqueName: string;
+}
+
+export class CloseDispenserDTO {
   @IsNotEmpty()
   @IsString()
   uniqueName: string;

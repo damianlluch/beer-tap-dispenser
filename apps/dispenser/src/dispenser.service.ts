@@ -59,4 +59,22 @@ export class DispenserService {
       return false;
     }
   }
+
+  async close(dispenser: DispenserDocument): Promise<boolean> {
+    try {
+      const session = await this.connection.startSession();
+      await session.withTransaction(async () => {
+        await this.dispenserModel.updateOne(
+            { uniqueName: dispenser.uniqueName },
+            { $set: { status: DispenserStatus.Closed }},
+            session,
+        );
+      })
+      await session.endSession();
+      return true;
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
+  }
 }
