@@ -8,6 +8,10 @@ export class CreateDispenserDTO {
 
   @IsNotEmpty()
   @IsPositive()
+  totalLitres: number;
+
+  @IsNotEmpty()
+  @IsPositive()
   price: number;
 
   @IsEnum(BrandName)

@@ -2,6 +2,7 @@ export interface CreateDispenserInterface {
   flor_volume: number;
   price: number;
   brand: string;
+  totalLitres: number;
   beerType: string;
 }
 

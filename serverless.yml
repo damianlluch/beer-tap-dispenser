@@ -14,10 +14,6 @@ provider:
   runtime: nodejs14.x
   environment:
     MONGODB_URI: ${env:MONGODB_URI}
-    JWT_SECRET: ${env:JWT_SECRET}
-    JWT_EXPIRATION_TIME: ${env:JWT_EXPIRATION_TIME}
-    ENCRYPTION_KEY: ${env:ENCRYPTION_KEY}
-    AUTH_REDIRECT_URI: ${env:AUTH_REDIRECT_URI}
 
 functions:
   dispenser:
@@ -26,6 +22,12 @@ functions:
       - http:
           method: POST
           path: dispenser
+      - http:
+          method: PUT
+          path: dispenser/openDispenser
+      - http:
+          method: PUT
+          path: dispenser/closeDispenser
     package:
       patterns:
         - dist/apps/dispenser/**

@@ -14,6 +14,9 @@ export class Dispenser {
   @Prop({ type: Number, required: true })
   price: number;
 
+  @Prop({ type: Number, required: true })
+  totalLitres: number;
+
   @Prop({ type: String, enum: BeerType, required: true })
   beerType: string;
 
