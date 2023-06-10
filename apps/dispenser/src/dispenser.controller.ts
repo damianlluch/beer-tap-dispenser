@@ -1,6 +1,7 @@
 import { DispenserService } from "./dispenser.service";
 import {CloseDispenserDTO, CreateDispenserDTO, OpenDispenserDTO} from "./dto/dispenser.dto";
 import {
+  BadRequestException,
   Body,
   Controller,
   HttpStatus,
@@ -25,6 +26,7 @@ export class DispenserController {
   ) {
     console.log("POST /");
     console.log("Body:", JSON.stringify(body));
+
     try {
       const dispenser: Dispenser = {
         ...new Dispenser(),
@@ -40,12 +42,20 @@ export class DispenserController {
           .concat(body.beerType.replace(/ /g, "").toLowerCase()),
       };
 
+      const dispenserExist = await this.dispenserService.findByUniqueName(dispenser.uniqueName);
+      if (dispenserExist) {
+        return res.status(HttpStatus.CONFLICT).json({
+          message: "Dispenser already exist",
+        });
+      }
+
       const dispenserCreated: DispenserDocument =
-        await this.dispenserService.create(dispenser);
+          await this.dispenserService.create(dispenser);
       return res.status(HttpStatus.OK).json({
         message: "Dispenser Created",
         dispenser: dispenserCreated,
       });
+
     } catch (e) {
       console.error(e);
     }

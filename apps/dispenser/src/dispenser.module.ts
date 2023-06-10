@@ -4,6 +4,7 @@ import { DispenserService } from "./dispenser.service";
 import { MongooseModule } from "@nestjs/mongoose";
 import { DispenserSchema } from "./schemas/dispenser.schema";
 import { DatabaseModule } from "@app/database";
+import {TaskService} from "./task.service";
 
 @Module({
   imports: [
@@ -16,6 +17,6 @@ import { DatabaseModule } from "@app/database";
     ]),
   ],
   controllers: [DispenserController],
-  providers: [DispenserService],
+  providers: [DispenserService, TaskService],
 })
 export class DispenserModule {}

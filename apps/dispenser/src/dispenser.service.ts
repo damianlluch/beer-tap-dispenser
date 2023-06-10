@@ -48,7 +48,7 @@ export class DispenserService {
       await session.withTransaction(async () => {
         await this.dispenserModel.updateOne(
             { uniqueName: dispenser.uniqueName },
-            { $set: { status: DispenserStatus.Open }},
+            { $set: { status: DispenserStatus.Open, timeOpen: Date.now() }},
             session,
         );
       })

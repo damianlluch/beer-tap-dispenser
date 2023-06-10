@@ -17,8 +17,14 @@ export class Dispenser {
   @Prop({ type: Number, required: true })
   totalLitres: number;
 
+  @Prop({ type: Number, required: false, default: 0 })
+  litresDispensed: number;
+
   @Prop({ type: String, enum: BeerType, required: true })
   beerType: string;
+
+  @Prop({ type: Date, required: false })
+  timeOpen: Date;
 
   @Prop({ type: String, enum: BrandName, required: true })
   brand: string;
