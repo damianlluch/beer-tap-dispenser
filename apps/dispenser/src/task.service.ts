@@ -30,6 +30,8 @@ export class TaskService {
                 for (const dispenser of openDispensers) {
                     const timeSinceOpen = now.getTime() - new Date(dispenser.timeOpen).getTime();
 
+                    // Falta actualizar los litros consumidos y la sumatoria de dinero ganado
+
                     if (dispenser.litresDispensed >= maxLitresPerPerson || timeSinceOpen > maxOpenTime) {
                         await this.dispenserModel.updateOne(
                             { uniqueName: dispenser.uniqueName },

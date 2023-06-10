@@ -42,7 +42,7 @@ export class DispenserService {
     }
   }
 
-  async open(dispenser: DispenserDocument): Promise<boolean> {
+  async open(dispenser: DispenserDocument | Dispenser): Promise<boolean> {
     try {
       const session = await this.connection.startSession();
       await session.withTransaction(async () => {

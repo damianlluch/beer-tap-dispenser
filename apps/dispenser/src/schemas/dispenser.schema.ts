@@ -24,7 +24,7 @@ export class Dispenser {
   beerType: string;
 
   @Prop({ type: Date, required: false })
-  timeOpen: Date;
+  timeOpen?: Date;
 
   @Prop({ type: String, enum: BrandName, required: true })
   brand: string;
