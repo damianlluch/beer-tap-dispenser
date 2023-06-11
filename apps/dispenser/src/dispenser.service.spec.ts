@@ -10,7 +10,6 @@ describe('DispenserService', () => {
     const mockDispenserModel = {
         create: jest.fn(),
         findOne: jest.fn(),
-        findByUniqueName: jest.fn(),
         updateOne: jest.fn(),
     };
 
