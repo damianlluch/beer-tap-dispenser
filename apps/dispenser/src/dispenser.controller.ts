@@ -132,7 +132,7 @@ export class DispenserController {
         });
       } else {
         return res.status(HttpStatus.CONFLICT).json({
-          message: "Error clsing the dispenser",
+          message: "Error closing the dispenser",
         });
       }
     } catch (e) {

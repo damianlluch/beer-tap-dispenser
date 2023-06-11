@@ -24,7 +24,7 @@ export class TaskService {
             try {
                 return await this.dispenserService.close(dispenser, session);
             } catch (e) {
-                if (e.code !== 112) {  // si el error no es WriteConflict
+                if (e.code !== 112) {
                     throw e;
                 }
             }
