@@ -13,12 +13,18 @@ import {
 import { Response } from "express";
 import { Dispenser, DispenserDocument } from "./schemas/dispenser.schema";
 import {DispenserStatus} from "./interfaces/dispenser.interface";
+import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 
+@ApiTags('dispenser')
+@Controller("/dispenser")
 @Controller("/dispenser")
 export class DispenserController {
   constructor(private readonly dispenserService: DispenserService) {}
 
   @Post("/")
+  @ApiOperation({ summary: 'Create a new dispenser' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Dispenser successfully created' })
+  @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Dispenser already exists' })
   async createDispenser(
     @Request() req: Request,
     @Res() res: Response,
@@ -63,6 +69,11 @@ export class DispenserController {
   }
 
   @Put("/openDispenser")
+  @ApiOperation({ summary: 'Open a dispenser' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Dispenser successfully opened' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'The dispenser does not exist' })
+  @ApiResponse({ status: HttpStatus.NOT_ACCEPTABLE, description: 'The dispenser is already open' })
+  @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Error opening the dispenser' })
   async openDispenser(
     @Request() req: Request,
     @Res() res: Response,
@@ -102,6 +113,11 @@ export class DispenserController {
   }
 
   @Put("/closeDispenser")
+  @ApiOperation({ summary: 'Close a dispenser' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Dispenser successfully closed' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'The dispenser does not exist' })
+  @ApiResponse({ status: HttpStatus.NOT_ACCEPTABLE, description: 'The dispenser is already closed' })
+  @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Error closing the dispenser' })
   async closeDispenser(
       @Request() req: Request,
       @Res() res: Response,
