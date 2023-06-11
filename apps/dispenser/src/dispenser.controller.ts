@@ -124,7 +124,7 @@ export class DispenserController {
           message: "The dispenser is already closed",
         });
       }
-      const dispenserResult: boolean = await this.dispenserService.close(dispenserClosed);
+      const dispenserResult: boolean = await this.dispenserService.closeManually(dispenserClosed);
       if (dispenserResult) {
         return res.status(HttpStatus.OK).json({
           message: "Dispenser successfully closed",
