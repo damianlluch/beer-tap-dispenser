@@ -31,14 +31,14 @@ export class DispenserService {
 
   async findByUniqueName(
       uniqueName: string
-  ): Promise<DispenserDocument> {
+  ): Promise<DispenserDocument | null> {
     let dispenser: DispenserDocument;
     try {
-      dispenser = await this.dispenserModel.findOne({ uniqueName });
-      console.log(dispenser, 'dispenser')
+      dispenser = await this.dispenserModel.findOne({ uniqueName: uniqueName });
       return dispenser;
     } catch (e) {
       console.error(e);
+      return null;
     }
   }
 

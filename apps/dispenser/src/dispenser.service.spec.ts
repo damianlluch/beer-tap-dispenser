@@ -10,6 +10,7 @@ describe('DispenserService', () => {
     const mockDispenserModel = {
         create: jest.fn(),
         findOne: jest.fn(),
+        findByUniqueName: jest.fn(),
         updateOne: jest.fn(),
     };
 
@@ -79,5 +80,33 @@ describe('DispenserService', () => {
             expect(result).toEqual(true);
         });
     });
+    describe('findByUniqueName', () => {
+        it('should return an existing dispenser by unique name', async () => {
+            const dispenser: Dispenser = {
+                flow_volume: 0.1,
+                price: 2,
+                brand: BrandName.Corona,
+                totalLitres: 100,
+                litresDispensed: 0,
+                beerType: BeerType.IPA,
+                status: DispenserStatus.Open,
+                uniqueName: 'UniqueName',
+            };
+            mockDispenserModel.findOne.mockResolvedValue(dispenser);
+            const result = await service.findByUniqueName(dispenser.uniqueName);
+            expect(result).toEqual(dispenser);
+        });
+    });
+    describe('findByUniqueName', () => {
+        it('should return null if dispenser does not exist', async () => {
+            const uniqueName = 'NonExistingName';
+            mockDispenserModel.findOne.mockResolvedValue(null);
+            const result = await service.findByUniqueName(uniqueName);
+            expect(result).toBeNull();
+        });
+    });
+
+
+
 
 });
