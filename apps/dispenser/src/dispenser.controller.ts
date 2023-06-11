@@ -35,6 +35,7 @@ export class DispenserController {
         price: body.price,
         beerType: body.beerType,
         totalLitres: body.totalLitres,
+        emptyDispenser: false,
         brand: body.brandName,
         uniqueName: body.brandName
           .replace(/ /g, "")
