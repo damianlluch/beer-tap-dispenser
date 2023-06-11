@@ -38,8 +38,8 @@ export class Dispenser {
   @Prop({ type: String })
   uniqueName: string;
 
-  @Prop({ type: Boolean, default: false })
-  emptyDispenser: boolean;
+  @Prop({ type: Boolean, default: false, required: false })
+  emptyDispenser?: boolean;
 }
 
 export const DispenserSchema = SchemaFactory.createForClass(Dispenser);

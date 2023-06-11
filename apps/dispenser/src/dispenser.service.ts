@@ -73,13 +73,13 @@ export class DispenserService {
     return dispenser.price * litresConsumed;
   }
 
-  private async updateLitresDispensed(dispenser: DispenserDocument, litresConsumed: number, session: ClientSession | null = null): Promise<boolean> {
+  async closeManually(dispenser: DispenserDocument): Promise<boolean> {
     try {
-      await this.dispenserModel.updateOne(
-          { uniqueName: dispenser.uniqueName },
-          { $inc: { litresDispensed: litresConsumed } },
-          { session }
-      );
+      const session = await this.connection.startSession();
+      await session.withTransaction(async () => {
+        await this.close(dispenser, session)
+      })
+      await session.endSession();
       return true;
     } catch (e) {
       console.error(e);
@@ -87,12 +87,8 @@ export class DispenserService {
     }
   }
 
-
-
-  async close(dispenser: DispenserDocument): Promise<boolean> {
+  async close(dispenser: DispenserDocument, session: ClientSession | null = null): Promise<boolean> {
     try {
-      const session = await this.connection.startSession();
-      await session.withTransaction(async () => {
         const litresConsumed = this.calculateLitresConsumed(dispenser);
         const totalPrice = this.calculateTotalPrice(dispenser, litresConsumed);
 
@@ -106,17 +102,12 @@ export class DispenserService {
         await this.orderModel.create([order], {session});
         const isDispenserEmpty = (dispenser.totalLitres - dispenser.litresDispensed - litresConsumed) <= 0;
 
-
-        await this.updateLitresDispensed(dispenser, litresConsumed, session);
-
         await this.dispenserModel.updateOne(
             { uniqueName: dispenser.uniqueName },
             { $set: { status: DispenserStatus.Closed, timeOpen: null, emptyDispenser: isDispenserEmpty,
-              }},
+              }, $inc: { litresDispensed: litresConsumed }},
             session,
         );
-      })
-      await session.endSession();
       return true;
     } catch (e) {
       console.error(e);
