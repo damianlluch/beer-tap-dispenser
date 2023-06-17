@@ -1,7 +1,6 @@
 import { DispenserService } from "./dispenser.service";
 import {CloseDispenserDTO, CreateDispenserDTO, GetDispenserDTO, OpenDispenserDTO} from "./dto/dispenser.dto";
 import {
-  BadRequestException,
   Body,
   Controller, Get,
   HttpStatus,
@@ -14,13 +13,15 @@ import { Response } from "express";
 import { Dispenser, DispenserDocument } from "./schemas/dispenser.schema";
 import {DispenserStatus, TotalSpendingInterface} from "./interfaces/dispenser.interface";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { UseGuards } from '@nestjs/common';
+import {JwtAuthGuard} from "../../auth/src/auth.guard";
 
 @ApiTags('dispenser')
-@Controller("/dispenser")
 @Controller("/dispenser")
 export class DispenserController {
   constructor(private readonly dispenserService: DispenserService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post("/")
   @ApiOperation({ summary: 'Create a new dispenser' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Dispenser successfully created' })

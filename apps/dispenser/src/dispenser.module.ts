@@ -6,6 +6,7 @@ import { DispenserSchema } from "./schemas/dispenser.schema";
 import { DatabaseModule } from "@app/database";
 import {TaskService} from "./task.service";
 import {OrderSchema} from "./schemas/order.schema";
+import {JwtService} from "@nestjs/jwt";
 
 @Module({
   imports: [
@@ -22,6 +23,6 @@ import {OrderSchema} from "./schemas/order.schema";
     ]),
   ],
   controllers: [DispenserController],
-  providers: [DispenserService, TaskService],
+  providers: [DispenserService, TaskService, JwtService],
 })
 export class DispenserModule {}

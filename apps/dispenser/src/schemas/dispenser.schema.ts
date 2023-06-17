@@ -6,7 +6,6 @@ import {
 } from "../interfaces/dispenser.interface";
 import { Document } from 'mongoose';
 
-
 export type DispenserDocument = Dispenser & Document;
 
 @Schema()
@@ -24,7 +23,7 @@ export class Dispenser {
   litresDispensed: number;
 
   @Prop({ type: Number, required: false, default: 0 })
-  totalInvoiced: number;
+  totalInvoiced?: number;
 
   @Prop({ type: String, enum: BeerType, required: true })
   beerType: string;

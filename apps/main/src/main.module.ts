@@ -3,6 +3,7 @@ import { DispenserModule } from "../../dispenser/src/dispenser.module";
 import { MongooseModule } from "@nestjs/mongoose";
 import * as dotenv from "dotenv";
 import { ScheduleModule } from '@nestjs/schedule';
+import {AuthModule} from "../../auth/src/auth.module";
 
 dotenv.config();
 
@@ -10,7 +11,8 @@ dotenv.config();
   imports: [
     ScheduleModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGODB_URI),
-    DispenserModule
+    DispenserModule,
+    AuthModule
   ],
 })
 export class MainModule {}
