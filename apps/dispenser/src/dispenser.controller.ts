@@ -1,9 +1,9 @@
 import { DispenserService } from "./dispenser.service";
-import {CloseDispenserDTO, CreateDispenserDTO, OpenDispenserDTO} from "./dto/dispenser.dto";
+import {CloseDispenserDTO, CreateDispenserDTO, GetDispenserDTO, OpenDispenserDTO} from "./dto/dispenser.dto";
 import {
   BadRequestException,
   Body,
-  Controller,
+  Controller, Get,
   HttpStatus,
   Post,
   Put,
@@ -12,7 +12,7 @@ import {
 } from "@nestjs/common";
 import { Response } from "express";
 import { Dispenser, DispenserDocument } from "./schemas/dispenser.schema";
-import {DispenserStatus} from "./interfaces/dispenser.interface";
+import {DispenserStatus, TotalSpendingInterface} from "./interfaces/dispenser.interface";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 
 @ApiTags('dispenser')
@@ -40,6 +40,7 @@ export class DispenserController {
         flow_volume: body.flor_volume,
         price: body.price,
         beerType: body.beerType,
+        totalInvoiced: 0,
         totalLitres: body.totalLitres,
         emptyDispenser: false,
         brand: body.brandName,
@@ -137,22 +138,53 @@ export class DispenserController {
 
       if (dispenserClosed.status == DispenserStatus.Closed) {
         return res.status(HttpStatus.NOT_ACCEPTABLE).json({
-          message: "The dispenser is already closed",
+          message: `The dispenser ${dispenserClosed.brand} - ${dispenserClosed.beerType} is already closed`,
         });
       }
       const dispenserResult: boolean = await this.dispenserService.closeManually(dispenserClosed);
       if (dispenserResult) {
         return res.status(HttpStatus.OK).json({
-          message: "Dispenser successfully closed",
+          message: `Dispenser successfully closed ${dispenserClosed.brand} - ${dispenserClosed.beerType}`,
           dispenser: dispenserClosed,
         });
       } else {
         return res.status(HttpStatus.CONFLICT).json({
-          message: "Error closing the dispenser",
+          message: `Error closing the dispenser ${dispenserClosed.brand} - ${dispenserClosed.beerType}`,
         });
       }
     } catch (e) {
       console.error(e);
     }
   }
+
+  @Get("/dispenserInvoicedOrders")
+  @ApiOperation({ summary: 'Get the total amount invoiced and orders for a dispenser' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Dispenser total invoiced and orders returned successfully' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'The dispenser does not exist' })
+  async getDispenserInvoicedOrders(
+      @Res() res: Response,
+      @Body() body: GetDispenserDTO
+  ) {
+    console.log("PUT /dispenserInvoicedOrders");
+    console.log("Body:", JSON.stringify(body));
+    let result: TotalSpendingInterface;
+    try {
+      const dispenser: DispenserDocument =
+          await this.dispenserService.findByUniqueName(body.uniqueName);
+
+      if (!dispenser) {
+        return res.status(HttpStatus.NOT_FOUND).json({
+          message: "The dispenser does not exist",
+        });
+      }
+      result = await this.dispenserService.getDispenserInvoicedOrders(body.uniqueName);
+      return res.status(HttpStatus.OK).json({
+        message: `${dispenser.brand} - ${dispenser.beerType} - Total beer sold`,
+        result: result,
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
 }

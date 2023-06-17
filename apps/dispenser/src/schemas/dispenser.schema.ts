@@ -23,6 +23,9 @@ export class Dispenser {
   @Prop({ type: Number, required: false, default: 0 })
   litresDispensed: number;
 
+  @Prop({ type: Number, required: false, default: 0 })
+  totalInvoiced: number;
+
   @Prop({ type: String, enum: BeerType, required: true })
   beerType: string;
 

@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import {Injectable, NotFoundException} from "@nestjs/common";
 import { ClientSession, Connection, Model, Types } from "mongoose";
 import { InjectConnection, InjectModel } from "@nestjs/mongoose";
 import { Dispenser, DispenserDocument } from "./schemas/dispenser.schema";
-import {CreateDispenserInterface, DispenserStatus} from "./interfaces/dispenser.interface";
+import {CreateDispenserInterface, DispenserStatus, TotalSpendingInterface} from "./interfaces/dispenser.interface";
 import {Order} from "./schemas/order.schema";
 
 @Injectable()
@@ -104,7 +104,11 @@ export class DispenserService {
 
         await this.dispenserModel.updateOne(
             { uniqueName: dispenser.uniqueName },
-            { $set: { status: DispenserStatus.Closed, timeOpen: null, emptyDispenser: isDispenserEmpty,
+            { $set: {
+              status: DispenserStatus.Closed,
+              timeOpen: null,
+              emptyDispenser: isDispenserEmpty,
+              totalInvoiced: dispenser.totalInvoiced + totalPrice
               }, $inc: { litresDispensed: litresConsumed }},
             session,
         );
@@ -114,4 +118,20 @@ export class DispenserService {
       return false;
     }
   }
+
+  async getDispenserInvoicedOrders(uniqueName: string): Promise<TotalSpendingInterface> {
+    const dispenser = await this.dispenserModel.findOne({ uniqueName });
+
+    if (!dispenser) {
+      throw new NotFoundException('No dispenser found with this unique name');
+    }
+
+    const orders = await this.orderModel.find({ beer: dispenser._id }).select('-beer');
+
+    return {
+      totalInvoiced: dispenser.totalInvoiced,
+      orders,
+    };
+  }
+
 }

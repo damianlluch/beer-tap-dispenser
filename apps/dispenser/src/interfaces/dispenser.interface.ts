@@ -1,3 +1,5 @@
+import {Order} from "../schemas/order.schema";
+
 export interface CreateDispenserInterface {
   flor_volume: number;
   price: number;
@@ -28,4 +30,9 @@ export enum BrandName {
 export enum DispenserStatus {
   Open = "open",
   Closed = "closed",
+}
+
+export interface TotalSpendingInterface {
+  orders: Order[];
+  totalInvoiced: number;
 }

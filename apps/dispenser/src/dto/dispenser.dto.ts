@@ -42,3 +42,9 @@ export class CloseDispenserDTO {
   @IsString()
   uniqueName: string;
 }
+
+export class GetDispenserDTO {
+  @IsNotEmpty()
+  @IsString()
+  uniqueName: string;
+}
