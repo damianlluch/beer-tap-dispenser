@@ -1,0 +1,196 @@
+{
+	"info": {
+		"_postman_id": "2d7b120c-fdc5-43ee-aad8-07c9443b3ee0",
+		"name": "API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27776472",
+		"_collection_link": "https://birrita.postman.co/workspace/Team-Workspace~7e8fcaee-26ab-42b7-8dfc-0f22ac55139f/collection/27776472-2d7b120c-fdc5-43ee-aad8-07c9443b3ee0?action=share&creator=27776472&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Dispenser",
+			"item": [
+				{
+					"name": "Create Dispenser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp1YW4iLCJzdWIiOiI2NDhkYzM1NjgyYzk4N2Y1OTI5ZjkwOGQiLCJpYXQiOjE2ODc3MTk1NTgsImV4cCI6MTY4NzcyMzE1OH0.x2S2qIScVZvhMWMpKLzkbczQ-_tEGn8RZSyYRY7t2JQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"flor_volume\": 0.4,\n    \"price\": 5,\n    \"brandName\": \"corona\",\n    \"beerType\": \"barleyWine\",\n    \"totalLitres\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/dispenser/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"dispenser",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Open Dispenser",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uniqueName\": \"quilmesstout\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/dispenser/openDispenser",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"dispenser",
+								"openDispenser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Close Dispenser",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uniqueName\": \"quilmesstout\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/dispenser/closeDispenser",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"dispenser",
+								"closeDispenser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Total Invoiced",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uniqueName\": \"stellaartoisipa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/dispenser/dispenserInvoicedOrders",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"dispenser",
+								"dispenserInvoicedOrders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"juan\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/register",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"juan\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
