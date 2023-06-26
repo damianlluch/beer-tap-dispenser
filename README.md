@@ -1,71 +1,47 @@
-# Beer tap dispenser API
+# Birrita Project
 
-Anyone who goes to a festival at least one time knows how difficult is to grab some drinks from the bars. They are
-crowded and sometimes queues are longer than the main artist we want to listen!
+This project is named Birrita. A Postman collection file has been provided for testing purposes. Additionally, Swagger has been integrated into the project, providing a means to interact with the API directly, which is available at the /api path.
 
-That's why some promoters are developing an MVP for new festivals. Bar counters where you can go and serve yourself
-a beer. This will help make the waiting time much faster, making festival attendees happier and concerts even more
-crowded, avoiding delays!
+A JWT login system has been developed, restricting the ability to create new beer dispensers to admin users only.
 
-<p align="center">
-    <img alt="Tap dispenser" width="300px" src="./.github/assets/dispenser.png" />
-</p>
+Authentication is not required for the rest of the endpoints.
 
-## How it works?
+A CRON job has been implemented to monitor tap opening times, and certain limits have been established for litres per person and maximum tap opening time in order to make the solution more closely resemble a real-world scenario.
 
-The aim of this API is to allow organizers to set up these bar counters allowing the attendees self-serving.
+Writes have been implemented with transactions for enhanced security.
 
-So, once an attendee wants to drink a beer they just need to open the tap! The API will start counting how much flow
-comes out and, depending on the price, calculate the total amount of money.
+## Setup and Run
 
-You could find the whole description of the API in the [OpenAPI description file](/api.spec.yaml) and send request to a
-mock server with [this URL](https://rviewer.stoplight.io/docs/beer-tap-dispenser/juus8uwnzzal5-beer-tap-dispenser)
+To setup and run the project, use the following commands:
 
-### Workflow
+1. Install the necessary packages:
 
-The workflow of this API is as follows:
+```sh
+npm install
+```
 
-1. Admins will **create the dispenser** by specifying a `flow_volume`. This config will help to know how many liters of
-   beer come out per second and be able to calculate the total spend.
-2. Every time an attendee **opens the tap** of a dispenser to puts some beer, the API will receive a change on the
-   corresponding dispenser to update the status to `open`. With this change, the API will start counting how much time
-   the tap is open and be able to calculate the total price later
-3. Once the attendee **closes the tap** of a dispenser, as the glass is full of beer, the API receives a change on the
-   corresponding dispenser to update the status to `close`. At this moment, the API will stop counting and mark it
-   closed.
+2. Run the project:
 
-At the end of the event, the promoters will want to know how much money they make with this new approach. So, we have to
-provide some information about how many times a dispenser was used, for how long, and how much money was made with each
-service.
+```sh
+npm run start
+```
 
-> ⚠️ The promoters could check how much money was spent on each dispenser while an attendee is taking beer!
-> So you have to control that by calculating the time diff between the tap opening and the request time
+## Testing with Postman
 
----
+A Postman collection has been included in the repository for testing the API endpoints. Import the collection into Postman and execute the requests.
 
-## What are we looking for?
+## Swagger API Documentation
 
-* **A well-designed solution and architecture.** Avoid duplication, extract re-usable code
-  where makes sense. We want to see that you can create an easy-to-maintain codebase.
-* **Test as much as you can.** One of the main pain points of maintaining other's code
-  comes when it does not have tests. So try to create tests covering, at least, the main classes.
-* **Document your decisions**. Try to explain your decisions, as well as any other technical requirement (how to run the
-  API, external dependencies, etc ...)
+The Swagger API documentation is available at `/api` path on the running server. You can interact with the API directly using Swagger.
 
-## How to submit your solution
+## JWT Authentication
 
-* Push your code to the `devel` branch - we encourage you to commit regularly to show your thinking process was.
-* **Create a new Pull Request** to `main` branch & **merge it**.
+JWT authentication is used to restrict the ability to create new beer dispensers to admin users only. Use the login endpoint to authenticate.
 
-Once merged you **won't be able to change or add** anything to your solution, so double-check that everything is as
-you expected!
+## CRON Job
 
-Remember that **there is no countdown**, so take your time and implement a solution that you are proud!
+A CRON job runs regularly to monitor and enforce limits for litres per person and maximum tap opening time.
 
---- 
+## Transactional Writes
 
-<p align="center">
-  If you have any feedback or problem, <a href="mailto:help@rviewer.io">let us know!</a> 🤘
-  <br><br>
-  Made with ❤️ by <a href="https://rviewer.io">Rviewer</a>
-</p>
+Writes to the database are handled with transactions to ensure data integrity and consistency.
