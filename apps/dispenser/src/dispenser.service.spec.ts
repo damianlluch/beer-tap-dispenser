@@ -13,6 +13,11 @@ describe('DispenserService', () => {
         updateOne: jest.fn(),
     };
 
+    const mockOrderModel = {
+        create: jest.fn(),
+        find: jest.fn(),
+    };
+
     const mockConnection = {
         startSession: jest.fn().mockReturnValue({
             withTransaction: jest.fn().mockImplementation((fn) => {
@@ -24,7 +29,6 @@ describe('DispenserService', () => {
         }),
     };
 
-
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
@@ -32,6 +36,10 @@ describe('DispenserService', () => {
                 {
                     provide: getModelToken('Dispensers'),
                     useValue: mockDispenserModel,
+                },
+                {
+                    provide: getModelToken('Orders'),
+                    useValue: mockOrderModel,
                 },
                 {
                     provide: getConnectionToken(),
@@ -43,8 +51,8 @@ describe('DispenserService', () => {
         service = module.get<DispenserService>(DispenserService);
     });
 
-    it('should be defined', () => {
-        expect(service).toBeDefined();
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     describe('create', () => {
